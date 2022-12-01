@@ -82,7 +82,8 @@ public class RobotContainer {
   
     // Create widget for code version
     // #define CODE_VERSION ROBOT_VERSION_STRING " " __DATE__ " " __TIME__ 
-    String CODE_VERSION = "TEMP_JAVA_Conversion";
+    String CODE_VERSION = RobotProperties.getTime();
+    String ROBOT_VERSION_STRING = CODE_VERSION;
     m_nte_CodeVersion = m_sbt_Robot.add("Code Version", CODE_VERSION)
       .withSize(3, 1)
       .withPosition(0, 0)
@@ -91,9 +92,9 @@ public class RobotContainer {
     
   // Called ONCE when the robot is disabled
   public void disabledInit() {
-    // #ifdef ENABLE_DRIVETRAIN
-    m_driveTrain.resetEncoders();
-    // #endif // ENABLE_DRIVETRAIN
+    if(RobotProperties.enableDrivetrain()) {
+      m_driveTrain.resetEncoders();
+    }
     // #ifdef ENABLE_VISION
     //m_vision.InitVision(); // Causes camera stream to freeze
     // #endif // ENABLE_VISION
@@ -129,9 +130,10 @@ public class RobotContainer {
     m_launcher.setLaunchSoftLimits();
     m_launcher.setupClose();
     m_climber.setClimberSoftLimits();
-    // #ifdef ENABLE_DRIVETRAIN
-    m_driveTrain.resetGyro();
-    // #endif // ENABLE_DRIVETRAIN
+
+    if(RobotProperties.enableDrivetrain()) {
+      m_driveTrain.resetGyro();
+    }
     
     if (DriverStation.isFMSAttached()) {
       m_driveTrain.burnFlash();
@@ -144,13 +146,13 @@ public class RobotContainer {
   
   public void configureButtonBindings() {
     // Configure your button bindings here
-    // #ifdef ENABLE_DRIVETRAIN
+    if(RobotProperties.enableDrivetrain()) {
       // Commence reduced speed driving when bumper(s) pressed
       // new JoystickButton(driver_control, ConXBOXControl.RIGHT_BUMPER)
       //   .whileHeld(new TeleOpDrive(m_driveTrain, driver_control));
       // new JoystickButton(driver_control, ConXBOXControl.LEFT_BUMPER)
       //   .whileHeld(new TeleOpDrive(m_driveTrain, driver_control));
-    // #endif // ENABLE_DRIVETRAIN
+    }
 
     // #ifdef ENABLE_LAUNCHER
       // Duplicate Launch OI controls on both driver & codriver inputs
